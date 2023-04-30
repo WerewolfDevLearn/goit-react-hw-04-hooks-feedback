@@ -1,35 +1,43 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import useStates from "./Hooks/useStates";
+import Section from "./Section";
+import FeedbackOptions from "./FeedbackOption/FeedbackOption";
+import Notification from "./Notification/Notification";
+import Statistics from "./Statistics/Statistics";
+interface State {
+  [key: string]: number;
+}
+export default function App() {
+  const options = ["good", "neutral", "bad"];
+  const [good, updateGood] = useStates(0);
+  const [neutral, updateNeutral] = useStates(0);
+  const [bad, updateBad] = useStates(0);
+  const arrOfFunc = [updateGood, updateNeutral, updateBad];
+  const total = good + neutral + bad;
 
-function App() {
-  const [count, setCount] = useState(0)
+  const countPositiveFeedbackPercentage = () => {
+    const ratio = Math.round((good / total) * 100);
+    return ratio;
+  };
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
-  )
-}
+    <>
+      <Section title='Please leave feedback'>
+        <FeedbackOptions options={options} arrOfFunc={arrOfFunc} />
+      </Section>
 
-export default App
+      {total === 0 ? (
+        <Notification massage={"No feedback given"} />
+      ) : (
+        <Section title='Statistics'>
+          <Statistics
+            good={good}
+            neutral={neutral}
+            bad={bad}
+            total={total}
+            positivePercentage={countPositiveFeedbackPercentage()}
+          />
+        </Section>
+      )}
+    </>
+  );
+}
