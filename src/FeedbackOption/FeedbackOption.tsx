@@ -1,4 +1,3 @@
-import { nanoid } from "nanoid";
 import FeedbackOptionsStl from "./FeedbackOptions.module.css";
 
 interface IFeedbackOPTProps {
@@ -10,7 +9,7 @@ export default function FeedbackOptions({ options, arrOfFunc }: IFeedbackOPTProp
   return (
     <div>
       {options.map((option, idx) => (
-        <button type='button' key={nanoid()} className={FeedbackOptionsStl.button} onClick={arrOfFunc[idx]}>
+        <button type='button' key={option} className={FeedbackOptionsStl.button} onClick={arrOfFunc[idx]}>
           {option}
         </button>
       ))}
